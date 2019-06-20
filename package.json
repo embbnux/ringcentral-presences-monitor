@@ -1,11 +1,14 @@
 {
-  "name": "call-supervise",
-  "version": "0.1.0",
+  "name": "presences-monitor",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "ringcentral": "^3.2.2",
+    "use-global-storage": "^0.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
