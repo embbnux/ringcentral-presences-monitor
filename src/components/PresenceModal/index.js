@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -35,7 +36,7 @@ function getModalStyle() {
   };
 }
 
-function PresenceModal({ opened, presence, onClose }) {
+function PresenceModal({ opened, presence, onClose, superviseCall }) {
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
 
@@ -49,31 +50,37 @@ function PresenceModal({ opened, presence, onClose }) {
           Calls:
         </Typography>
         <Table className={classes.table} size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Direction</TableCell>
-            <TableCell align="right">Telephony Status</TableCell>
-            <TableCell align="right">From</TableCell>
-            <TableCell align="right">To</TableCell>
-            <TableCell align="right">Start Time</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {presence.activeCalls && presence.activeCalls.map(call => (
-            <TableRow
-              key={call.id}
-            >
-              <TableCell component="th" scope="row">
-                {call.direction}
-              </TableCell>
-              <TableCell align="right">{call.telephonyStatus}</TableCell>
-              <TableCell align="right">{call.from}</TableCell>
-              <TableCell align="right">{call.to}</TableCell>
-              <TableCell align="right">{call.startTime}</TableCell>
+          <TableHead>
+            <TableRow>
+              <TableCell>Direction</TableCell>
+              <TableCell align="right">Telephony Status</TableCell>
+              <TableCell align="right">From</TableCell>
+              <TableCell align="right">To</TableCell>
+              <TableCell align="right">Start Time</TableCell>
+              <TableCell align="right">Operation</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {presence.activeCalls && presence.activeCalls.map(call => (
+              <TableRow
+                key={call.id}
+              >
+                <TableCell component="th" scope="row">
+                  {call.direction}
+                </TableCell>
+                <TableCell align="right">{call.telephonyStatus}</TableCell>
+                <TableCell align="right">{call.from}</TableCell>
+                <TableCell align="right">{call.to}</TableCell>
+                <TableCell align="right">{call.startTime}</TableCell>
+                <TableCell align="right">
+                  <Button color="primary" variant="contained" onClick={() => superviseCall(call, presence.extension.extensionNumber)}>
+                    Supervise
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </Modal>
   );

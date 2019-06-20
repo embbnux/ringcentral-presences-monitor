@@ -112,6 +112,19 @@ function App() {
           const data = response.json();
           return data.records;
         }}
+        superviseCall={async (call, extensionNumber) => {
+          const devicesResponse = await window.rcPlatform.get('/account/~/extension/~/device');
+          const devices = devicesResponse.json().records;
+          const device = devices[0];
+          if (!device) {
+            return;
+          }
+          await window.rcPlatform.post(`/account/~/telephony/sessions/${call.telephonySessionId}/supervise`, {
+            mode: 'Listen',
+            extensionNumber,
+            deviceId: device.id
+          });
+        }}
         subscription={subscription}
       />
     );

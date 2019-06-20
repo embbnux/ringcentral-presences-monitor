@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const DEFAULT_PRESENCES = [];
 
-function Home({ loadPresences, subscription }) {
+function Home({ loadPresences, subscription, superviseCall }) {
   const classes = useStyles();
   const [presences, setPresences] = useStorage('presencesData', DEFAULT_PRESENCES);
   const [presence, setPresence] = useState({});
@@ -105,7 +105,12 @@ function Home({ loadPresences, subscription }) {
           ))}
         </TableBody>
       </Table>
-      <PresenceModal opened={opened} onClose={() => { setOpened(false); }} presence={presence}/>
+      <PresenceModal
+        opened={opened}
+        onClose={() => { setOpened(false); }}
+        presence={presence}
+        superviseCall={superviseCall}
+      />
     </Container>
   );
 }
