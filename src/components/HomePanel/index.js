@@ -8,12 +8,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import Fab from '@material-ui/core/Fab';
 
 import PresenceModal from '../PresenceModal';
 
 import useStorage from '../../useStorage';
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: '20px',
+  },
   table: {
     minWidth: 650,
   },
@@ -27,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 
 const DEFAULT_PRESENCES = [];
 
-function Home({ loadPresences, subscription, superviseCall }) {
+function Home({ loadPresences, subscription, superviseCall, endCall }) {
   const classes = useStyles();
   const [presences, setPresences] = useStorage('presencesData', DEFAULT_PRESENCES);
   const [presence, setPresence] = useState({});
@@ -73,7 +78,14 @@ function Home({ loadPresences, subscription, superviseCall }) {
   }, [presences]);
 
   return (
-    <Container maxWidth="md" component="main">
+    <Container maxWidth="md" component="main" className={classes.container}>
+      <Fab color="primary" aria-label="Refresh" onClick={async () => {
+        setPresences([]);
+        const records = await loadPresences();
+        setPresences(records);
+      }}>
+        <RefreshIcon />
+      </Fab>
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
@@ -110,6 +122,7 @@ function Home({ loadPresences, subscription, superviseCall }) {
         onClose={() => { setOpened(false); }}
         presence={presence}
         superviseCall={superviseCall}
+        endCall={endCall}
       />
     </Container>
   );

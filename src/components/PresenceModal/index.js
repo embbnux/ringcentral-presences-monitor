@@ -2,6 +2,7 @@ import React from 'react';
 
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -36,10 +37,9 @@ function getModalStyle() {
   };
 }
 
-function PresenceModal({ opened, presence, onClose, superviseCall }) {
+function PresenceModal({ opened, presence, onClose, superviseCall, endCall }) {
   const [modalStyle] = React.useState(getModalStyle);
   const classes = useStyles();
-
   return (
     <Modal open={opened} onClose={onClose} >
       <div className={classes.modalContent} style={modalStyle}>
@@ -61,7 +61,7 @@ function PresenceModal({ opened, presence, onClose, superviseCall }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {presence.activeCalls && presence.activeCalls.map(call => (
+            {presence.activeCalls && presence.activeCalls.filter(c => c.telephonyStatus !== 'NoCall').map(call => (
               <TableRow
                 key={call.id}
               >
@@ -73,9 +73,14 @@ function PresenceModal({ opened, presence, onClose, superviseCall }) {
                 <TableCell align="right">{call.to}</TableCell>
                 <TableCell align="right">{call.startTime}</TableCell>
                 <TableCell align="right">
-                  <Button color="primary" variant="contained" onClick={() => superviseCall(call, presence.extension.extensionNumber)}>
-                    Supervise
-                  </Button>
+                  <ButtonGroup size="small" aria-label="Small outlined contained primary button group">
+                    <Button onClick={() => endCall(call)}>
+                      End
+                    </Button>
+                    <Button onClick={() => superviseCall(call, presence.extension.extensionNumber)}>
+                      Supervise
+                    </Button>
+                  </ButtonGroup>
                 </TableCell>
               </TableRow>
             ))}

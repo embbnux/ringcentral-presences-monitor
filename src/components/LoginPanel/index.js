@@ -33,7 +33,7 @@ function LoginPanel({ onLogin }) {
           <Grid container spacing={2} justify="center">
             <Grid item>
               <Button variant="contained" color="primary" onClick={onLogin}>
-                Login
+                Login with RingCentral Sandbox account
               </Button>
             </Grid>
           </Grid>

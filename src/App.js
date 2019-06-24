@@ -125,6 +125,9 @@ function App() {
             deviceId: device.id
           });
         }}
+        endCall={async (call) => {
+          await window.rcPlatform.delete(`/account/~/telephony/sessions/${call.telephonySessionId}`);
+        }}
         subscription={subscription}
       />
     );
@@ -147,7 +150,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            Presences Monitor
+            RingCentral Presences Monitor
           </Typography>
           {logoutButton}
         </Toolbar>
