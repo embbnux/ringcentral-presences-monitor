@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ringcentral-presences-monitor/static/css/main.34de6062.chunk.css",
+    "main.js": "/ringcentral-presences-monitor/static/js/main.4d468102.chunk.js",
+    "main.js.map": "/ringcentral-presences-monitor/static/js/main.4d468102.chunk.js.map",
+    "runtime~main.js": "/ringcentral-presences-monitor/static/js/runtime~main.72a09043.js",
+    "runtime~main.js.map": "/ringcentral-presences-monitor/static/js/runtime~main.72a09043.js.map",
+    "static/js/2.a3d07a2a.chunk.js": "/ringcentral-presences-monitor/static/js/2.a3d07a2a.chunk.js",
+    "static/js/2.a3d07a2a.chunk.js.map": "/ringcentral-presences-monitor/static/js/2.a3d07a2a.chunk.js.map",
+    "index.html": "/ringcentral-presences-monitor/index.html",
+    "precache-manifest.03845255f9bd341aaab861d7e3e4e72c.js": "/ringcentral-presences-monitor/precache-manifest.03845255f9bd341aaab861d7e3e4e72c.js",
+    "service-worker.js": "/ringcentral-presences-monitor/service-worker.js",
+    "static/css/main.34de6062.chunk.css.map": "/ringcentral-presences-monitor/static/css/main.34de6062.chunk.css.map"
+  }
+}
