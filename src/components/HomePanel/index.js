@@ -32,9 +32,9 @@ const useStyles = makeStyles(theme => ({
 
 const DEFAULT_PRESENCES = [];
 
-function Home({ loadPresences, subscription, superviseCall, endCall }) {
+function Home({ ownerId, loadPresences, subscription, superviseCall, endCall }) {
   const classes = useStyles();
-  const [presences, setPresences] = useStorage('presencesData', DEFAULT_PRESENCES);
+  const [presences, setPresences] = useStorage(`${ownerId}-presencesData`, DEFAULT_PRESENCES);
   const [presence, setPresence] = useState({});
   const [opened, setOpened] = useState(false);
 
@@ -43,7 +43,6 @@ function Home({ loadPresences, subscription, superviseCall, endCall }) {
       return;
     }
     const onNotification = (data) => {
-      console.log(data);
       const newPresences = [].concat(presences);
       const presenseIndex = newPresences.findIndex((p) => p.extension.id === data.body.extensionId);
       if (presenseIndex > -1) {

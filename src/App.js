@@ -30,52 +30,27 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const createSubscription = async () => {
-  const cacheKey = 'subscribeKey';
-  const subscription = window.rcSDK.createSubscription();
-  const cachedSubscriptionData = window.rcSDK.cache().getItem(cacheKey);
-  if (cachedSubscriptionData) {
-    try {
-      subscription.setSubscription(cachedSubscriptionData); 
-    } catch (e) {
-      console.error('Cannot set subscription data', e);
-    }
-  } else {
-    subscription.setEventFilters(['/account/~/presence?detailedTelephonyState=true']);
-  }
-  subscription.on([subscription.events.subscribeSuccess, subscription.events.renewSuccess], () => {
-    window.rcSDK.cache().setItem(cacheKey, subscription.subscription());
-  });
-  try {
-    await subscription.register();
-  } catch (e) {
-    console.error('Cannot register subscription', e);
-  }
-  return subscription;
-};
-
-function App() {
+function App({ client }) {
   const classes = useStyles();
   const [ready, setReady] = useState(false);
   const [authState, setAuthState] = useStorage('authState', false);
 
-  const rcPlatform = window.rcPlatform;
-  const [subscription, setSubscription] = useState(null);
+  const [_, setSubscription] = useState(null);
 
   useEffect(() => {
     async function checkLogin() {
-      const isLogined = await rcPlatform.loggedIn()
+      const isLogined = await client.checkLogin()
       setAuthState(isLogined)
       if (isLogined) {
         const resetAuthState = () => {
           setAuthState(false);
         }
-        rcPlatform.on(rcPlatform.events.refreshError, resetAuthState);
-        const sub = await createSubscription();
+        client.platform.on(client.platform.events.refreshError, resetAuthState);
+        const sub = await client.createSubscription(['/account/~/presence?detailedTelephonyState=true']);
         setSubscription(sub);
         setReady(true)
         return () => {
-          rcPlatform.removeListener(rcPlatform.events.refreshError, resetAuthState);
+          client.platform.removeListener(client.platform.events.refreshError, resetAuthState);
         };
       }
       // Not login
@@ -83,10 +58,9 @@ function App() {
         setReady(true)
         return;
       }
-      const loginOptions = window.rcPlatform.parseLoginRedirect(window.location.search);
-      if (loginOptions.code) {
-        await window.rcPlatform.login(loginOptions);
-        window.location.assign('/');
+      const loginResult = await client.loginFromCodeQuery();
+      if (loginResult) {
+        window.location.assign(process.env.REACT_APP_RINGCENTRAL_REDIRECT_URI);
       }
     }
     checkLogin();
@@ -99,8 +73,7 @@ function App() {
     mainPage = (
       <LoginPanel
         onLogin={() => {
-          const loginUrl = window.rcPlatform.loginUrl();
-          window.location.assign(loginUrl);
+          client.gotologinPage();
         }}
       />
     );
@@ -108,27 +81,17 @@ function App() {
     mainPage = (
       <HomePanel
         loadPresences={async () => {
-          const response = await window.rcPlatform.get('/account/~/presence?detailedTelephonyState=true');
-          const data = response.json();
-          return data.records;
+          const data = await client.loadPresences();
+          return data;
         }}
         superviseCall={async (call, extensionNumber) => {
-          const devicesResponse = await window.rcPlatform.get('/account/~/extension/~/device');
-          const devices = devicesResponse.json().records;
-          const device = devices[0];
-          if (!device) {
-            return;
-          }
-          await window.rcPlatform.post(`/account/~/telephony/sessions/${call.telephonySessionId}/supervise`, {
-            mode: 'Listen',
-            extensionNumber,
-            deviceId: device.id
-          });
+          await client.superviseCall(call, extensionNumber);
         }}
         endCall={async (call) => {
-          await window.rcPlatform.delete(`/account/~/telephony/sessions/${call.telephonySessionId}`);
+          await client.endCall(call)
         }}
-        subscription={subscription}
+        subscription={client.subscription}
+        ownerId={client.ownerId}
       />
     );
   }
