@@ -1,9 +1,8 @@
-import RingCentral from 'ringcentral';
-
 class RingCentralClient {
   constructor(sdk) {
     this._sdk = sdk;
     this._platform = sdk.platform();
+    this._deviceId = null;
   }
 
   async checkLogin() {
@@ -60,22 +59,29 @@ class RingCentralClient {
     return data.records;
   }
 
-  async superviseCall(call, extensionNumber) {
+  async loadDevices() {
     const devicesResponse = await this._platform.get('/account/~/extension/~/device');
     const devices = devicesResponse.json().records;
-    const device = devices.filter(d => d.status === 'Online' && d.computerName === 'LMXMN141')[0];
-    if (!device) {
+    return devices;
+  }
+
+  async superviseCall(call, extensionNumber) {
+    if (!this._deviceId) {
       return;
     }
     await this._platform.post(`/account/~/telephony/sessions/${call.telephonySessionId}/supervise`, {
       mode: 'Listen',
       extensionNumber,
-      deviceId: device.id
+      deviceId: this._deviceId
     });
   }
 
   async endCall(call) {
     await this._platform.delete(`/account/~/telephony/sessions/${call.telephonySessionId}`);
+  }
+
+  setDeviceId(id) {
+    this._deviceId = id;
   }
 
   get subscription() {

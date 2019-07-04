@@ -12,6 +12,7 @@ import useStorage from './useStorage';
 
 import LoginPanel from './components/LoginPanel';
 import HomePanel from './components/HomePanel';
+import DeviceMenu from './components/DeviceMenu';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -101,13 +102,23 @@ function App({ client }) {
       color="inherit"
       onClick={() => {
         setAuthState(false);
-        window.rcSDK.platform().logout();
+        client.logout();
       }}
     >
       Logout
     </Button>
   ) : null;
 
+  const deviceMenu = authState ? (
+    <DeviceMenu
+      loadDevices={async () => {
+        const data = await client.loadDevices();
+        return data
+      }}
+      onDeviceIdChanged={(id) => client.setDeviceId(id)}
+      ownerId={client.ownerId}
+    />
+  ) : null;
   return (
     <React.Fragment>
       <AppBar position="static">
@@ -115,6 +126,7 @@ function App({ client }) {
           <Typography variant="h6" className={classes.title}>
             RingCentral Presences Monitor
           </Typography>
+          {deviceMenu}
           {logoutButton}
         </Toolbar>
       </AppBar>

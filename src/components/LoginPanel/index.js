@@ -24,7 +24,7 @@ function LoginPanel({ onLogin }) {
     <div className={classes.heroContent}>
       <Container maxWidth="sm">
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-          Call Supervise
+          Presences Monitor
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
           A app for admin to  supervise calls under their RingCentral account.
