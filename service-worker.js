@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/ringcentral-presences-monitor/precache-manifest.03845255f9bd341aaab861d7e3e4e72c.js"
+  "/ringcentral-presences-monitor/precache-manifest.f0c664d04106a8042b72ff3374c3a01f.js"
 );
 
 self.addEventListener('message', (event) => {
